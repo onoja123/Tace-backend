@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>Socket.IO Test</title>
+    <!-- <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src gap://ready file://* *; style-src 'self' http://* https://* 'unsafe-inline'; script-src 'self' http://* https://* 'unsafe-inline' 'unsafe-eval'"
+    /> -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js"
+      integrity="sha512-HTENHrkQ/P0NGDFd5nk6ibVtCkcM7jhr2c7GyvXp5O+4X6O5cQO9AhqFzM+MdeBivsX7Hoys2J7pp2wdgMpCvw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <body style="display: flex; flex-direction: column">
+    <input
+      type="text"
+      id="message-input"
+      style="margin-top: 1rem; max-width: 200px"
+    />
+    <textarea
+      id="area-input"
+      style="margin-top: 1rem; max-width: 200px"
+    ></textarea>
+    <button id="send-button" style="margin-top: 1rem; max-width: 200px">
+      Send
+    </button>
+    <script>
+      const socket = io("http://localhost:6790");
+
+      socket.on("connect", () => {
+        console.log("Connected to server");
+      });
+
+      socket.on("response", (message) => {
+        console.log(`Received response: ${message}`);
+      });
+      socket.on("newTrip", (message) => {
+        console.log(`Received newTrip rider:`, message);
+      });
+      socket.on("connected", (message) => {
+        console.log(`Received response: ${message}`);
+      });
+
+      socket.on("disconnect", (e) => {
+        console.log("Disconnected from server", e);
+      });
+
+      const sendButton = document.getElementById("send-button");
+      sendButton.addEventListener("click", () => {
+        const messageInput = document.getElementById("message-input");
+        const message = messageInput.value;
+        const areaInput = document.getElementById("area-input");
+        const area = areaInput.value;
+        socket.emit(message, area);
+      });
+    </script>
+  </body>
+</html>
