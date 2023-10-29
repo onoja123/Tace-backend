@@ -26,19 +26,27 @@ const wss = (app: any) => {
     console.log("a user connected");
 
     const authorization = socket.handshake.headers.authorization;
-    // console.log(authorization);
-    // console.log(">>>>>>>>", socket.handshake.headers);
+    console.log(authorization);
+    console.log(">>>>>>>>", socket.handshake.headers);
 
     if (!authorization) return socket.disconnect();
-
+  
     const [bearer, token] = authorization.split(" ");
 
-    if (!bearer || bearer?.toLowerCase() !== "bearer" || !token)
-      return socket.disconnect();
+    console.log(token)
 
+
+    if (!bearer || bearer?.toLowerCase() !== "bearer" || !token) {
+      console.log("Invalid bearer or token");
+      return socket.disconnect();
+    }
+  
     const decodedToken: any = await decodeJWT(token);
+  
 
     console.log(decodedToken);
+
+    
     if (!decodedToken) return socket.disconnect();
 
     const { uid } = decodedToken.data;
